@@ -12,6 +12,7 @@ class Two_Dudes():
 		self.find_ply = False
 		self.inf = 1000000000
 		self.startTime = None
+		self.stop = False
 		self.mult_factor = [[0 for i in range(4)] for j in range(4)]
 		pass
 
@@ -182,7 +183,7 @@ class Two_Dudes():
 
 	def nextMove(self, board, depth, curr_player, alpha, beta, old_move):
 
-		if depth >= 2:
+		if depth >= 5:
 			"""
 			print "DEBUG\n\n"
 			t = self.getExpectedVal(board, old_move)
@@ -197,6 +198,9 @@ class Two_Dudes():
 
 		inc_depth = 1
 
+		if depth == 0:
+			total_branching = 0
+
 		if curr_player == self.us:
 			best_val = -self.inf*1000
 			valid_moves = board.find_valid_move_cells(old_move)
@@ -204,12 +208,18 @@ class Two_Dudes():
 			if num_valid_moves != 0:
 				ret_move = valid_moves[0]
 			if num_valid_moves > 16:
-				inc_depth += 1
+				inc_depth += 2
 			for curr_move in valid_moves:
 				new_board = copy.deepcopy(board)
 				new_board.update(old_move, curr_move, curr_player)
 				value = self.nextMove(new_board, depth+inc_depth, self.them, alpha, beta, curr_move)
-				if (time.time() - self.startTime) >= 14.9:
+				if depth == 0:
+					total_branching += 1
+				if self.stop is False:
+					if (time.time() - self.startTime) >= 14.9:
+						self.stop = True
+						break
+				else:
 					break
 				if value > best_val:
 					best_val = value
@@ -224,14 +234,23 @@ class Two_Dudes():
 		else:
 			best_val = self.inf*1000
 			valid_moves = board.find_valid_move_cells(old_move)
+			num_valid_moves = len(valid_moves)
+			if num_valid_moves != 0:
+				ret_move = valid_moves[0]
+			if num_valid_moves > 16:
+				inc_depth += 2
 			for curr_move in valid_moves:
 				new_board = copy.deepcopy(board)
 				new_board.update(old_move, curr_move, curr_player)
-				value = self.nextMove(new_board, depth, self.us, alpha, beta, curr_move)
-				if (time.time() - self.startTime) >= 14.9:
+				value = self.nextMove(new_board, depth+inc_depth, self.us, alpha, beta, curr_move)
+				if self.stop is False:	
+					if (time.time() - self.startTime) >= 14.9:
+						self.stop = True
+						break
+				else:
 					break
 				best_val = min(best_val, value)
-				alpha = min(alpha, best_val)
+				beta = min( beta, best_val)
 				if beta <= alpha:
 					break
 			return best_val
