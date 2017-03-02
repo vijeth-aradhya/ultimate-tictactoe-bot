@@ -283,7 +283,7 @@ class Two_Dudes_With_IterSearch():
 
 	def nextMove(self, board, depth, curr_player, alpha, beta, old_move):
 
-		if depth >= self.total_depth:
+		if depth >= self.total_depth or board.find_terminal_state() != ('CONTINUE', '-'):
 			"""
 			print "DEBUG\n\n"
 			t = self.getExpectedVal(board, old_move)
@@ -300,6 +300,7 @@ class Two_Dudes_With_IterSearch():
 
 		if depth == 0:
 			total_branching = 0
+			total_prune = 0
 
 		if curr_player == self.us:
 			best_val = -self.inf*1000
@@ -326,11 +327,14 @@ class Two_Dudes_With_IterSearch():
 					ret_move = curr_move
 				alpha = max(alpha, best_val)
 				if beta <= alpha:
+					if depth == 0:
+						total_prune = 1
 					break
 			if depth == 0:
 				print "\n\n"
 				print "Curr iter :", self.total_depth
-				print "Valid moves :", valid_moves
+				print "valid moves :", valid_moves
+				print "IS_pruned", total_prune
 				print "Total number of branches :", total_branching, "out of", num_valid_moves
 				print "\n\n"
 				return ret_move
