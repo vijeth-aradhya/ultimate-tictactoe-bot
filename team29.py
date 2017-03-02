@@ -275,7 +275,9 @@ class Two_Dudes_With_IterSearch():
 	def iterSearch(self, board, old_move):
 		self.total_depth = 3
 		while self.stop is False:
-			self.best_move = self.nextMove(board, 0, self.us, -self.inf*1000, self.inf*1000, old_move)
+			temp_best_move = self.nextMove(board, 0, self.us, -self.inf*1000, self.inf*1000, old_move)
+			if self.stop is False:
+				self.best_move = temp_best_move
 			self.total_depth += 1
 		return self.best_move
 
@@ -327,8 +329,9 @@ class Two_Dudes_With_IterSearch():
 					break
 			if depth == 0:
 				print "\n\n"
-				print "Curr iter", self.total_depth
-				print "Total number of branches : ", total_branching, "out of", num_valid_moves
+				print "Curr iter :", self.total_depth
+				print "Valid moves :", valid_moves
+				print "Total number of branches :", total_branching, "out of", num_valid_moves
 				print "\n\n"
 				return ret_move
 			else:
@@ -343,7 +346,7 @@ class Two_Dudes_With_IterSearch():
 				new_board = copy.deepcopy(board)
 				new_board.update(old_move, curr_move, curr_player)
 				value = self.nextMove(new_board, depth+inc_depth, self.us, alpha, beta, curr_move)
-				if self.stop is False:	
+				if self.stop is False:
 					if (time.time() - self.startTime) >= 14.9:
 						print "\n\n"
 						print "FULL DEPTH not reached --> ", depth
@@ -560,7 +563,7 @@ class Two_Dudes():
 			if num_valid_moves != 0:
 				ret_move = valid_moves[0]
 			if num_valid_moves > 16:
-				inc_depth += 2
+				inc_depth += 1
 			for curr_move in valid_moves:
 				new_board = copy.deepcopy(board)
 				new_board.update(old_move, curr_move, curr_player)
@@ -590,7 +593,7 @@ class Two_Dudes():
 			if num_valid_moves != 0:
 				ret_move = valid_moves[0]
 			if num_valid_moves > 16:
-				inc_depth += 2
+				inc_depth += 1
 			for curr_move in valid_moves:
 				new_board = copy.deepcopy(board)
 				new_board.update(old_move, curr_move, curr_player)
