@@ -6,6 +6,7 @@ import copy
 
 
 class Two_Dudes():
+	
 	def __init__(self):
 		self.us = None
 		self.them = None
@@ -125,7 +126,7 @@ class Two_Dudes():
 				mult = -10
 			elif empty == 3:
 				mult = -5
-		return (mult + (us_num-them_num)*pow(2, abs(us_num-them_num)))
+		return mult
 
 	def getCellValue(self, cell):
 
@@ -328,7 +329,6 @@ class Two_Dudes():
 		while self.stop is False:
 			temp_best_move = self.nextMove(board, 0, self.us, -self.inf*1000, self.inf*1000, old_move)
 			if self.stop is False:
-				# print "\n\nWAIT\n\n"
 				self.best_move = temp_best_move
 			self.total_depth += 1
 		return self.best_move
@@ -365,8 +365,8 @@ class Two_Dudes():
 					total_branching += 1
 				if self.stop is False:
 					if (time.time() - self.startTime) >= 14.9:
-						# print "\n\n"
-						# print "FULL DEPTH not reached --> ", depth
+						#print "\n\n"
+						#print "FULL DEPTH not reached --> ", depth
 						self.stop = True
 						break
 				else:
@@ -402,8 +402,8 @@ class Two_Dudes():
 				value = self.nextMove(new_board, depth+1, self.us, alpha, beta, curr_move)
 				if self.stop is False:
 					if (time.time() - self.startTime) >= 14.9:
-						# print "\n\n"
-						# print "FULL DEPTH not reached --> ", depth
+						#print "\n\n"
+						#print "FULL DEPTH not reached --> ", depth
 						self.stop = True
 						break
 				else:
@@ -414,13 +414,3 @@ class Two_Dudes():
 					#print "Is_pruned :", (depth, self.total_depth)
 					break
 			return best_val
-
-class Random_Player():
-	def __init__(self):
-		pass
-
-	def move(self, board, old_move, flag):
-		#You have to implement the move function with the same signature as this
-		#Find the list of valid cells allowed
-		cells = board.find_valid_move_cells(old_move)
-		return cells[random.randrange(len(cells))]
