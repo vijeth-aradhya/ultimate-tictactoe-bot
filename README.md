@@ -15,6 +15,9 @@ There are five options:
 4. Bot vs. Random player
 5. Random player vs. Random player
 
+# Preview
+
+[![asciicast](https://asciinema.org/a/131367.png)](https://asciinema.org/a/131367)
 
 # Algorithm
 
